@@ -7,7 +7,7 @@ on:
 
 env:
   app-name: 'morsed'
-  release-files: README.* LICENSE
+  release-files: morsed README.* LICENSE
   graalvm-download-url-prefix: 'https://github.com/graalvm/graalvm-ce-builds/releases/download'
   graalvm-version: '20.2.0'
 
