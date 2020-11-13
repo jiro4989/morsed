@@ -1,0 +1,23 @@
+{
+  "name": "morsed",
+  "version": "1.0.0",
+  "description": "= morsed :toc: left :sectnums:",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiro4989/morsed.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jiro4989/morsed/issues"
+  },
+  "homepage": "https://github.com/jiro4989/morsed#readme"
+}

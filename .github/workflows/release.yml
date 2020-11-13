@@ -1,0 +1,175 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  app-name: 'morsed'
+  release-files: README.* LICENSE
+  graalvm-download-url-prefix: 'https://github.com/graalvm/graalvm-ce-builds/releases/download'
+  graalvm-version: '20.2.0'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        include:
+          - runs-on: ubuntu-latest
+            os: linux
+            cmd: gu
+            opts: '--static'
+          - runs-on: macOS-latest
+            os: darwin
+            cmd: gu
+            opts: ''
+          # - runs-on: windows-latest
+          #   os: windows
+          #   cmd: gu.cmd
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: DeLaGuardo/setup-graalvm@2.0
+        with:
+          graalvm-version: '20.2.0.java11'
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          # To use Clojure CLI 1.10.1.561 based on tools.deps
+          cli: '1.10.1.469'
+          # leiningen and boot-cli can be installed as well
+          lein: 2.9.4
+          # For leiningen and boot you could use 'latest' version
+          boot: latest
+
+      - name: Build native image
+        run: |
+          ${{ matrix.cmd }} install native-image
+          lein uberjar
+          native-image \
+            -jar target/${{ env.app-name }}.jar \
+            -H:Name=${{ env.app-name }} \
+            -H:+ReportExceptionStackTraces \
+            -J-Dclojure.spec.skip-macros=true \
+            -J-Dclojure.compiler.direct-linking=true \
+            "-H:IncludeResources=command.edn" \
+            "-H:IncludeResources=schema.edn" \
+            "-H:IncludeResources=config.edn" \
+            "-H:IncludeResources=version.txt" \
+            "-H:IncludeResources=docs.adoc" \
+            '-H:IncludeResources=.*/.*.bin$' \
+            --initialize-at-build-time  \
+            --report-unsupported-elements-at-runtime \
+            -H:Log=registerResource: \
+            --verbose \
+            --no-fallback \
+            --no-server \
+            ${{ matrix.opts }} \
+            "-J-Xmx3g"
+
+      - name: Run command
+        run: |
+          ./${{ env.app-name }}
+          ./${{ env.app-name }} -p 名詞 -s 寿司 吾輩は猫である。
+
+      - name: Create artifact
+        run: |
+          assets="${{ env.app-name }}_$(echo "${{ runner.os }}" | tr '[:upper:]' '[:lower:]')"
+          echo "$assets"
+          mkdir -p "dist/$assets"
+          cp -r ${{ env.release-files }} "dist/$assets/"
+          (
+            cd dist
+            if [[ "${{ runner.os }}" == Windows ]]; then
+              7z a "$assets.zip" "$assets"
+            else
+              tar czf "$assets.tar.gz" "$assets"
+            fi
+            ls -lah *.*
+          )
+      - uses: actions/upload-artifact@v2
+        with:
+          name: artifact-${{ matrix.os }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generate changelog
+        uses: scottbrenner/generate-changelog-action@1.0.2
+        id: changelog
+        env:
+          REPO: ${{ github.repository }}
+        with:
+          package-dir: '.github/package.json'
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: |
+            ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+      - name: Write upload_url to file
+        run: echo '${{ steps.create-release.outputs.upload_url }}' > upload_url.txt
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: create-release
+          path: upload_url.txt
+
+  upload-release:
+    runs-on: ubuntu-latest
+    needs: create-release
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset_name_suffix: linux.tar.gz
+            asset_content_type: application/gzip
+          - os: macOS-latest
+            asset_name_suffix: macos.tar.gz
+            asset_content_type: application/gzip
+          # - os: windows-latest
+          #   asset_name_suffix: windows.zip
+          #   asset_content_type: application/zip
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact-${{ matrix.os }}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: create-release
+
+      - id: vars
+        run: |
+          echo "::set-output name=upload_url::$(cat upload_url.txt)"
+
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.vars.outputs.upload_url }}
+          asset_path: ${{ env.app-name }}_${{ matrix.asset_name_suffix }}
+          asset_name: ${{ env.app-name }}_${{ matrix.asset_name_suffix }}
+          asset_content_type: ${{ matrix.asset_content_type }}
