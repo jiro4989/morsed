@@ -141,10 +141,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: linux
             asset_name_suffix: linux.tar.gz
             asset_content_type: application/gzip
-          - os: macOS-latest
+          - os: darwin
             asset_name_suffix: macos.tar.gz
             asset_content_type: application/gzip
           # - os: windows-latest
