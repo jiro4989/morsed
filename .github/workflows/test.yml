@@ -41,6 +41,11 @@ jobs:
             os: windows
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install leiningen
+        run: brew install leiningen
+        if: matrix.os == 'darwin'
+
       - name: Install GraalVM (unix)
         run: |
           cd /tmp
