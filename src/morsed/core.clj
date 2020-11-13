@@ -1,5 +1,7 @@
 (ns morsed.core
-  (:import [com.atilika.kuromoji.ipadic Token Tokenizer]))
+  (:import [com.atilika.kuromoji.ipadic Token Tokenizer])
+  (:require [clojure.tools.cli :refer [parse-opts]])
+  (:gen-class))
 
 (defn tokens [^String s]
   (.tokenize (Tokenizer.) s))
@@ -14,14 +16,22 @@
        (map #(part-replace % part sub))
        (apply str)))
 
-(defn pp [text part sub]
-  (println text " ---> " (convert text part sub)))
+(def cli-options
+  [["-p" "--part str" "part of speech level"
+    :default "名詞"]
+   ["-s" "--sub str" "substring"
+    :default "寿司"]
+   ["-h" "--help"]])
 
-(defn -main []
-  (do
-    (pp "吾輩は猫である。名前はまだない。" "名詞" "寿司")
-    (pp "右の頬を殴られたら左の頬を差し出せ" "名詞" "寿司")
-    (pp "彼のカレー" "名詞" "寿司")
-    (pp "このひき肉は引きにくいひき肉" "名詞" "寿司")
-    (pp "隣の客はよく柿食う客だ" "名詞" "寿司")
-  ))
+(defn do-main [args opts]
+  (println (convert (first args)
+                    (:part opts)
+                    (:sub opts))))
+
+(defn -main [& args]
+  (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
+    (cond
+      (or (zero? (count arguments))
+          (:help options)) (println summary)
+      (seq errors) (println errors)
+      :else (do-main arguments options))))
