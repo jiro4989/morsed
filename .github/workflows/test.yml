@@ -11,7 +11,12 @@ on:
       - 'README.*'
 
 env:
+  app-name: 'morsed'
   graalvm-version: '20.2.0'
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   test:
@@ -23,25 +28,44 @@ jobs:
       - uses: codecov/codecov-action@v1
 
   test-native-image:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        include:
+          - runs-on: ubuntu-latest
+            os: linux
+          - runs-on: macOS-latest
+            os: darwin
+          - runs-on: windows-latest
+            os: windows
     steps:
       - uses: actions/checkout@v2
-      - name: Install GraalVM
+      - name: Install GraalVM (unix)
         run: |
           cd /tmp
           if ! [ -d /tmp/graalvm-ce-java11-${{ env.graalvm-version }} ]; then
-            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-linux-amd64-${{ env.graalvm-version }}.tar.gz
+            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
 
-            tar xzf graalvm-ce-java11-linux-amd64-${{ env.graalvm-version }}.tar.gz
+            tar xzf graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
           fi
+        if: matrix.os != 'windows'
+      - name: Install GraalVM (windows)
+        run: |
+          cd /tmp
+          if ! [ -d /tmp/graalvm-ce-java11-${{ env.graalvm-version }} ]; then
+            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
+
+            unzip graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
+          fi
+        if: matrix.os == 'windows'
       - name: Build native image
         run: |
           export GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}
           $GRAALVM_HOME/bin/gu install native-image
           lein uberjar
           $GRAALVM_HOME/bin/native-image \
-            -jar target/morsed.jar \
-            -H:Name=morsed \
+            -jar target/${{ env.app-name }}.jar \
+            -H:Name=${{ env.app-name }} \
             -H:+ReportExceptionStackTraces \
             -J-Dclojure.spec.skip-macros=true \
             -J-Dclojure.compiler.direct-linking=true \
@@ -63,5 +87,5 @@ jobs:
 
       - name: Run command
         run: |
-          ./morsed
-          ./morsed -p 名詞 -s 寿司 吾輩は猫である。
+          ./${{ env.app-name }}
+          ./${{ env.app-name }} -p 名詞 -s 寿司 吾輩は猫である。
