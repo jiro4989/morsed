@@ -59,9 +59,9 @@ jobs:
 
       - name: Build native image
         run: |
-          $GRAALVM_HOME/bin/${{ matrix.cmd }} install native-image
+          ${{ matrix.cmd }} install native-image
           lein uberjar
-          $GRAALVM_HOME/bin/native-image \
+          native-image \
             -jar target/${{ env.app-name }}.jar \
             -H:Name=${{ env.app-name }} \
             -H:+ReportExceptionStackTraces \
