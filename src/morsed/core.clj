@@ -29,8 +29,13 @@
     :default "寿司"]
    ["-h" "--help"]])
 
+(defn args-or-stdinlines [args]
+  (if (zero? (count args))
+    (-> *in* java.io.BufferedReader. line-seq)
+    args))
+
 (defn do-main [args opts]
-  (doseq [text args]
+  (doseq [text (args-or-stdinlines args)]
     (println (convert text
                       (:part opts)
                       (:sub opts)))))
@@ -38,7 +43,6 @@
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
     (cond
-      (or (zero? (count arguments))
-          (:help options)) (println summary)
+      (:help options) (println summary)
       (seq errors) (println errors)
       :else (do-main arguments options))))
