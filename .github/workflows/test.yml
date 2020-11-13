@@ -39,9 +39,9 @@ jobs:
           - runs-on: macOS-latest
             os: darwin
             cmd: gu
-          - runs-on: windows-latest
-            os: windows
-            cmd: gu.cmd
+          # - runs-on: windows-latest
+          #   os: windows
+          #   cmd: gu.cmd
     steps:
       - uses: actions/checkout@v2
 
