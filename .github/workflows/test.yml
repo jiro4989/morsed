@@ -62,17 +62,17 @@ jobs:
 
       - name: Set environment variables (linux)
         run: |
-          echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}"
+          echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}" >> $GITHUB_ENV
         if: matrix.os == 'linux'
 
       - name: Set environment variables (darwin)
         run: |
-          echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}/Contents/Home"
+          echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}/Contents/Home" >> $GITHUB_ENV
         if: matrix.os == 'darwin'
 
       - name: Set environment variables (windows)
         run: |
-          echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}"
+          echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}" >> $GITHUB_ENV
         if: matrix.os == 'windows'
 
       - name: Build native image
