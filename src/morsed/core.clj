@@ -3,15 +3,21 @@
   (:require [clojure.tools.cli :refer [parse-opts]])
   (:gen-class))
 
+(set! *warn-on-reflection* true)
+
 (defn tokens [^String s]
   (.tokenize (Tokenizer.) s))
 
-(defn part-replace [token part sub]
+(defn part-replace [^Token token
+                    ^String part
+                    ^String sub]
   (if (= (.getPartOfSpeechLevel1 token) part)
     sub
     (.getSurface token)))
 
-(defn convert [text part sub]
+(defn convert [^String text
+               ^String part
+               ^String sub]
   (->> (tokens text)
        (map #(part-replace % part sub))
        (apply str)))
