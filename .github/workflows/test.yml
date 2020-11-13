@@ -59,9 +59,24 @@ jobs:
             unzip graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
           fi
         if: matrix.os == 'windows'
+
+      - name: Set environment variables (linux)
+        run: |
+          echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}"
+        if: matrix.os == 'linux'
+
+      - name: Set environment variables (darwin)
+        run: |
+          echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}/Contents/Home"
+        if: matrix.os == 'darwin'
+
+      - name: Set environment variables (windows)
+        run: |
+          echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}"
+        if: matrix.os == 'windows'
+
       - name: Build native image
         run: |
-          export GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}
           $GRAALVM_HOME/bin/gu install native-image
           lein uberjar
           $GRAALVM_HOME/bin/native-image \
