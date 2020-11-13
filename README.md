@@ -1,5 +1,8 @@
 # morsed
 
+![test](https://github.com/jiro4989/morsed/workflows/test/badge.svg)
+[![codecov](https://codecov.io/gh/jiro4989/morsed/branch/master/graph/badge.svg)](https://codecov.io/gh/jiro4989/morsed)
+
 A Clojure library designed to ... well, that part is up to you.
 
 ## Usage
