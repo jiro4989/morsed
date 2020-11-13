@@ -36,9 +36,11 @@ jobs:
           - runs-on: ubuntu-latest
             os: linux
             cmd: gu
+            opts: '--static'
           - runs-on: macOS-latest
             os: darwin
             cmd: gu
+            opts: ''
           # - runs-on: windows-latest
           #   os: windows
           #   cmd: gu.cmd
@@ -79,7 +81,7 @@ jobs:
             --verbose \
             --no-fallback \
             --no-server \
-            --static \
+            ${{ matrix.opts }} \
             "-J-Xmx3g"
           ls -lah
 
