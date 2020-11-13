@@ -61,3 +61,4 @@ jobs:
       - name: Run command
         run: |
           ./morsed
+          ./morsed -p 名詞 -s 寿司 吾輩は猫である。
