@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: DeLaGuardo/setup-graalvm@2.0
+      - uses: DeLaGuardo/setup-graalvm@master
         with:
           graalvm-version: '20.2.0.java11'
       - uses: DeLaGuardo/setup-clojure@master
