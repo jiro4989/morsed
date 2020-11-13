@@ -48,6 +48,7 @@ jobs:
             "-H:IncludeResources=config.edn" \
             "-H:IncludeResources=version.txt" \
             "-H:IncludeResources=docs.adoc" \
+            '-H:IncludeResources=.*/.*.bin$' \
             --initialize-at-build-time  \
             --report-unsupported-elements-at-runtime \
             -H:Log=registerResource: \
