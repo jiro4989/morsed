@@ -1,0 +1,49 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux-amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install GraalVM
+        run: |
+          cd /tmp
+          if ! [ -d /tmp/graalvm-ce-java11-19.3.1 ]; then
+            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-19.3.1/graalvm-ce-java11-linux-amd64-19.3.1.tar.gz
+
+            tar xzf graalvm-ce-java11-linux-amd64-19.3.1.tar.gz
+          fi
+      - name: Build native image
+        env:
+          GRAALVM_HOME: /tmp/graalvm-ce-java11-19.3.1
+        run: |
+          $GRAALVM_HOME/bin/gu install native-image
+          lein uberjar
+          $GRAALVM_HOME/bin/native-image \
+            -jar target/morsed.jar \
+            -H:Name=morsed \
+            -H:+ReportExceptionStackTraces \
+            -J-Dclojure.spec.skip-macros=true \
+            -J-Dclojure.compiler.direct-linking=true \
+            "-H:IncludeResources=command.edn" \
+            "-H:IncludeResources=schema.edn" \
+            "-H:IncludeResources=config.edn" \
+            "-H:IncludeResources=version.txt" \
+            "-H:IncludeResources=docs.adoc" \
+            --initialize-at-build-time  \
+            --report-unsupported-elements-at-runtime \
+            -H:Log=registerResource: \
+            --verbose \
+            --no-fallback \
+            --no-server \
+            --static \
+            "-J-Xmx3g"
+          ls -lah
+
+      - name: Run command
+        run: |
+          ./morsed
