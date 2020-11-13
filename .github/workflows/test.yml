@@ -46,7 +46,6 @@ jobs:
           cd /tmp
           curl -O -sL ${{ env.graalvm-download-url-prefix }}/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
           tar xzf graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
-          find /tmp
         if: matrix.os != 'windows'
       - name: Install GraalVM (windows)
         run: |
