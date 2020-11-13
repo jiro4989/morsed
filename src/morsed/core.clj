@@ -1,11 +1,9 @@
 (ns morsed.core
-  (:import [org.atilika.kuromoji Token Tokenizer]))
+  (:import [com.atilika.kuromoji.ipadic Token Tokenizer]))
 
 (defn example []
-  (let [tokenizer (.build (Tokenizer/builder))]
-    (doall
-     (for [token (.tokenize tokenizer "寿司が食べたい。")]
-       (println (.getSurfaceForm token) "\t" (.getAllFeatures token))))))
+  (let [tok (Tokenizer.)]
+    (println (.tokenize tok "お寿司が食べたい。"))))
 
 (defn -main []
   (example))
