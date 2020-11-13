@@ -10,6 +10,9 @@ on:
       - 'LICENSE'
       - 'README.*'
 
+env:
+  graalvm-version: '20.2.0'
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -26,15 +29,14 @@ jobs:
       - name: Install GraalVM
         run: |
           cd /tmp
-          if ! [ -d /tmp/graalvm-ce-java11-19.3.1 ]; then
-            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-19.3.1/graalvm-ce-java11-linux-amd64-19.3.1.tar.gz
+          if ! [ -d /tmp/graalvm-ce-java11-${{ env.graalvm-version }} ]; then
+            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-linux-amd64-${{ env.graalvm-version }}.tar.gz
 
-            tar xzf graalvm-ce-java11-linux-amd64-19.3.1.tar.gz
+            tar xzf graalvm-ce-java11-linux-amd64-${{ env.graalvm-version }}.tar.gz
           fi
       - name: Build native image
-        env:
-          GRAALVM_HOME: /tmp/graalvm-ce-java11-19.3.1
         run: |
+          export GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}
           $GRAALVM_HOME/bin/gu install native-image
           lein uberjar
           $GRAALVM_HOME/bin/native-image \
