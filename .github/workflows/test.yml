@@ -43,21 +43,15 @@ jobs:
       - name: Install GraalVM (unix)
         run: |
           cd /tmp
-          if ! [ -d /tmp/graalvm-ce-java11-${{ env.graalvm-version }} ]; then
-            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
-
-            tar xzf graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
-            find /tmp
-          fi
+          curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
+          tar xzf graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
+          find /tmp
         if: matrix.os != 'windows'
       - name: Install GraalVM (windows)
         run: |
           cd /tmp
-          if ! [ -d /tmp/graalvm-ce-java11-${{ env.graalvm-version }} ]; then
-            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
-
-            unzip graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
-          fi
+          curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
+          unzip graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
         if: matrix.os == 'windows'
 
       - name: Set environment variables (linux)
