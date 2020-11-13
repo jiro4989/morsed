@@ -74,9 +74,18 @@ jobs:
           echo "GRAALVM_HOME=/tmp/graalvm-ce-java11-${{ env.graalvm-version }}" >> $GITHUB_ENV
         if: matrix.os == 'windows'
 
-      - name: Build native image
+      - name: Install native image (unix)
         run: |
           $GRAALVM_HOME/bin/gu install native-image
+        if: matrix.os != 'windows'
+
+      - name: Install native image (windows)
+        run: |
+          $GRAALVM_HOME/bin/gu.cmd install native-image
+        if: matrix.os == 'windows'
+
+      - name: Build native image
+        run: |
           lein uberjar
           $GRAALVM_HOME/bin/native-image \
             -jar target/${{ env.app-name }}.jar \
