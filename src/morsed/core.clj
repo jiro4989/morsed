@@ -30,9 +30,10 @@
    ["-h" "--help"]])
 
 (defn do-main [args opts]
-  (println (convert (first args)
-                    (:part opts)
-                    (:sub opts))))
+  (doseq [text args]
+    (println (convert text
+                      (:part opts)
+                      (:sub opts)))))
 
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
