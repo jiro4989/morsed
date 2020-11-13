@@ -12,6 +12,7 @@ on:
 
 env:
   app-name: 'morsed'
+  graalvm-download-url-prefix: 'https://github.com/graalvm/graalvm-ce-builds/releases/download'
   graalvm-version: '20.2.0'
 
 defaults:
@@ -43,14 +44,14 @@ jobs:
       - name: Install GraalVM (unix)
         run: |
           cd /tmp
-          curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
+          curl -O -sL ${{ env.graalvm-download-url-prefix }}/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
           tar xzf graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.tar.gz
           find /tmp
         if: matrix.os != 'windows'
       - name: Install GraalVM (windows)
         run: |
           cd /tmp
-          curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
+          curl -O -sL ${{ env.graalvm-download-url-prefix }}/vm-${{ env.graalvm-version }}/graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
           unzip graalvm-ce-java11-${{ matrix.os }}-amd64-${{ env.graalvm-version }}.zip
         if: matrix.os == 'windows'
 
