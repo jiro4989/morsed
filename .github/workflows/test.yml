@@ -5,6 +5,14 @@ on:
   pull_request:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: lein deps
+      - run: lein cloverage --codecov
+      - uses: codecov/codecov-action@v1
+
   test-native-image:
     runs-on: ubuntu-latest
     steps:
