@@ -27,6 +27,7 @@
     :default "名詞"]
    ["-s" "--sub str" "substring"
     :default "寿司"]
+   ["-P" "--print" "print tokens"]
    ["-h" "--help"]])
 
 (defn args-or-stdinlines [args]
@@ -34,11 +35,28 @@
     (-> *in* java.io.BufferedReader. line-seq)
     args))
 
+(defn print-token [^String text]
+  (doseq [^Token token (tokens text)]
+    (println "   --surface" (.getSurface token))
+    (println "   --baseform" (.getBaseForm token))
+    (println "   --conjugationform" (.getConjugationForm token))
+    (println "   --conjugationtype" (.getConjugationType token))
+    (println "-p --part" (.getPartOfSpeechLevel1 token))
+    (println "   --part2" (.getPartOfSpeechLevel2 token))
+    (println "   --part3" (.getPartOfSpeechLevel3 token))
+    (println "   --part4" (.getPartOfSpeechLevel4 token))
+    (println "   --pronunciation" (.getPronunciation token))
+    (println "-r --reading" (.getReading token))
+    (println "----------------------")
+    ))
+
 (defn do-main [args opts]
   (doseq [text (args-or-stdinlines args)]
-    (println (convert text
-                      (:part opts)
-                      (:sub opts)))))
+    (if (:print opts)
+      (print-token text)
+      (println (convert text
+                        (:part opts)
+                        (:sub opts))))))
 
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
