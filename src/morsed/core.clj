@@ -33,15 +33,15 @@
 
 (def cli-options
   [[nil "--surface str" "surface"]
-   [nil "--baseform str" "baseform"]
-   [nil "--conjugationform str" "conjugationform"]
-   [nil "--conjugationtype str" "conjugationtype"]
-   ["-p" "--part str" "part of speech level 1"]
-   [nil "--part2 str" "part of speech level 2"]
-   [nil "--part3 str" "part of speech level 3"]
-   [nil "--part4 str" "part of speech level 4"]
-   [nil "--pronunciation str" "pronunciation"]
-   ["-r" "--reading str" "reading"]
+   [nil "--baseform str" "baseform 基本形"]
+   [nil "--conjugationform str" "conjugationform 活用形"]
+   [nil "--conjugationtype str" "conjugationtype 活用型"]
+   ["-p" "--part str" "part of speech level 1 品詞再分類1"]
+   [nil "--part2 str" "part of speech level 2 品詞再分類2"]
+   [nil "--part3 str" "part of speech level 3 品詞再分類3"]
+   [nil "--part4 str" "part of speech level 4 品詞再分類4"]
+   [nil "--pronunciation str" "pronunciation 発音"]
+   ["-r" "--reading str" "reading 読み"]
    ["-s" "--sub str" "substring"]
    ["-P" "--print" "print tokens"]
    ["-h" "--help"]])
@@ -54,15 +54,15 @@
 (defn print-token [^String text]
   (doseq [^Token token (tokens text)]
     (println "   --surface" (.getSurface token))
-    (println "   --baseform" (.getBaseForm token))
-    (println "   --conjugationform" (.getConjugationForm token))
-    (println "   --conjugationtype" (.getConjugationType token))
-    (println "-p --part" (.getPartOfSpeechLevel1 token))
-    (println "   --part2" (.getPartOfSpeechLevel2 token))
-    (println "   --part3" (.getPartOfSpeechLevel3 token))
-    (println "   --part4" (.getPartOfSpeechLevel4 token))
-    (println "   --pronunciation" (.getPronunciation token))
-    (println "-r --reading" (.getReading token))
+    (println "   --baseform 基本形" (.getBaseForm token))
+    (println "   --conjugationform 活用形" (.getConjugationForm token))
+    (println "   --conjugationtype 活用型" (.getConjugationType token))
+    (println "-p --part 品詞再分類1" (.getPartOfSpeechLevel1 token))
+    (println "   --part2 品詞再分類2" (.getPartOfSpeechLevel2 token))
+    (println "   --part3 品詞再分類3" (.getPartOfSpeechLevel3 token))
+    (println "   --part4 品詞再分類4" (.getPartOfSpeechLevel4 token))
+    (println "   --pronunciation 発音" (.getPronunciation token))
+    (println "-r --reading 読み" (.getReading token))
     (println "----------------------")
     ))
 
