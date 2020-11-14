@@ -29,11 +29,17 @@ jobs:
       - run: lein cloverage --codecov
       - uses: codecov/codecov-action@v1
 
-  check-code-format:
+  code-format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: lein cljfmt check
+
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: lein eastwood
 
   test-native-image:
     runs-on: ${{ matrix.runs-on }}
