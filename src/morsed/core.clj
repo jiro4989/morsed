@@ -69,8 +69,7 @@
     (println "   --part4 品詞再分類4" (.getPartOfSpeechLevel4 token))
     (println "   --pronunciation 発音" (.getPronunciation token))
     (println "-r --reading 読み" (.getReading token))
-    (println "----------------------")
-    ))
+    (println "----------------------")))
 
 (def usage ["morsed morphological analyzer sed."
             "Copyright (c) 2020 jiro4989"
@@ -80,7 +79,7 @@
             "Options:"])
 
 (defn print-usage [^String summary]
-  (println (str/join \newline (concat usage 
+  (println (str/join \newline (concat usage
                                       (str/split summary #"\n")))))
 
 (defn do-main [args opts]

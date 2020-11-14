@@ -22,13 +22,11 @@
   (testing "ok: baseform"
     (is (= "吾輩は寿司である" (convert "吾輩は猫である" {:baseform "猫"} "寿司"))))
   (testing "ok: surface"
-    (is (= "吾輩は寿司である" (convert "吾輩は猫である" {:surface "猫"} "寿司"))))
-  )
+    (is (= "吾輩は寿司である" (convert "吾輩は猫である" {:surface "猫"} "寿司")))))
 
 (deftest print-usage-test
   (testing "ok:"
-    (is (nil? (print-usage "吾輩は猫である"))))
-  )
+    (is (nil? (print-usage "吾輩は猫である")))))
 
 (deftest do-main-test
   (testing "ok: one argument"
