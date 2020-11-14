@@ -12,7 +12,7 @@
   (testing "ok: part3"
     (is (= "寿司は猫である" (convert "吾輩は猫である" {:part3 "一般"} "寿司"))))
   (testing "ok: part4"
-    (is (= "寿司寿司寿司寿司寿司" (convert "吾輩は猫である" {:part4 "*"} "寿司"))))
+    (is (= "寿司寿司寿司寿司寿司" (convert "吾輩は猫である" {:part4 "\\*"} "寿司"))))
   (testing "ok: pronunciation"
     (is (= "吾輩寿司猫である" (convert "吾輩は猫である" {:pronunciation "ワ"} "寿司"))))
   (testing "ok: conjugationform"
