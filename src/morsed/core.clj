@@ -1,6 +1,7 @@
 (ns morsed.core
   (:import [com.atilika.kuromoji.ipadic Token Tokenizer])
-  (:require [clojure.tools.cli :refer [parse-opts]])
+  (:require [clojure.tools.cli :refer [parse-opts]]
+            [clojure.string :as str])
   (:gen-class))
 
 (set! *warn-on-reflection* true)
@@ -66,6 +67,17 @@
     (println "----------------------")
     ))
 
+(def usage ["morsed morphological analyzer sed."
+            "Copyright (c) 2020 jiro4989"
+            "Released under the Apache License version 2.0."
+            "https://github.com/jiro4989/morsed"
+            ""
+            "Options:"])
+
+(defn print-usage [^String summary]
+  (println (str/join \newline (concat usage 
+                                      (str/split summary #"\n")))))
+
 (defn do-main [args opts]
   (doseq [text (args-or-stdinlines args)]
     (if (:print opts)
@@ -77,6 +89,6 @@
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
     (cond
-      (:help options) (println summary)
+      (:help options) (print-usage summary)
       (seq errors) (println errors)
       :else (do-main arguments options))))
