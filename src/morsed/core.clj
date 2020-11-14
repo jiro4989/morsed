@@ -9,24 +9,40 @@
   (.tokenize (Tokenizer.) s))
 
 (defn part-replace [^Token token
-                    ^String part
+                    opts
                     ^String sub]
-  (if (= (.getPartOfSpeechLevel1 token) part)
-    sub
-    (.getSurface token)))
+  (cond
+    (= (.getReading token) (:reading opts)) sub
+    (= (.getPartOfSpeechLevel1 token) (:part opts)) sub
+    (= (.getPartOfSpeechLevel2 token) (:part2 opts)) sub
+    (= (.getPartOfSpeechLevel3 token) (:part3 opts)) sub
+    (= (.getPartOfSpeechLevel4 token) (:part4 opts)) sub
+    (= (.getPronunciation token) (:pronunciation opts)) sub
+    (= (.getConjugationForm token) (:conjugationform opts)) sub
+    (= (.getConjugationType token) (:conjugationtype opts)) sub
+    (= (.getBaseForm token) (:baseform opts)) sub
+    (= (.getSurface token) (:surface opts)) sub
+    :else (.getSurface token)))
 
 (defn convert [^String text
-               ^String part
+               opts
                ^String sub]
   (->> (tokens text)
-       (map #(part-replace % part sub))
+       (map #(part-replace % opts sub))
        (apply str)))
 
 (def cli-options
-  [["-p" "--part str" "part of speech level"
-    :default "名詞"]
-   ["-s" "--sub str" "substring"
-    :default "寿司"]
+  [[nil "--surface str" "surface"]
+   [nil "--baseform str" "baseform"]
+   [nil "--conjugationform str" "conjugationform"]
+   [nil "--conjugationtype str" "conjugationtype"]
+   ["-p" "--part str" "part of speech level 1"]
+   [nil "--part2 str" "part of speech level 2"]
+   [nil "--part3 str" "part of speech level 3"]
+   [nil "--part4 str" "part of speech level 4"]
+   [nil "--pronunciation str" "pronunciation"]
+   ["-r" "--reading str" "reading"]
+   ["-s" "--sub str" "substring"]
    ["-P" "--print" "print tokens"]
    ["-h" "--help"]])
 
@@ -55,7 +71,7 @@
     (if (:print opts)
       (print-token text)
       (println (convert text
-                        (:part opts)
+                        opts
                         (:sub opts))))))
 
 (defn -main [& args]
