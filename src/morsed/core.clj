@@ -34,13 +34,12 @@
 (defn part-replace [^Token token
                     opts
                     ^String sub]
-  (let [m (loop [t token
-                 k (keys opts)]
+  (let [m (loop [k (keys opts)]
             (if (empty? k)
               true
-              (if-not (token-matched? t opts (first k))
+              (if-not (token-matched? token opts (first k))
                 false
-                (recur t (rest k)))))]
+                (recur (rest k)))))]
     (if m
       sub
       (.getSurface token))))
