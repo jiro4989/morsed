@@ -9,20 +9,25 @@
 (defn tokens [^String s]
   (.tokenize (Tokenizer.) s))
 
+(defn re-match-str? [^String ptn text]
+  (if (nil? ptn)
+    false
+    (not (nil? (re-matches (re-pattern ptn) text)))))
+
 (defn part-replace [^Token token
                     opts
                     ^String sub]
   (cond
-    (= (.getReading token) (:reading opts)) sub
-    (= (.getPartOfSpeechLevel1 token) (:part opts)) sub
-    (= (.getPartOfSpeechLevel2 token) (:part2 opts)) sub
-    (= (.getPartOfSpeechLevel3 token) (:part3 opts)) sub
-    (= (.getPartOfSpeechLevel4 token) (:part4 opts)) sub
-    (= (.getPronunciation token) (:pronunciation opts)) sub
-    (= (.getConjugationForm token) (:conjugationform opts)) sub
-    (= (.getConjugationType token) (:conjugationtype opts)) sub
-    (= (.getBaseForm token) (:baseform opts)) sub
-    (= (.getSurface token) (:surface opts)) sub
+    (re-match-str? (:reading opts) (.getReading token)) sub
+    (re-match-str? (:part opts) (.getPartOfSpeechLevel1 token)) sub
+    (re-match-str? (:part2 opts) (.getPartOfSpeechLevel2 token)) sub
+    (re-match-str? (:part3 opts) (.getPartOfSpeechLevel3 token)) sub
+    (re-match-str? (:part4 opts) (.getPartOfSpeechLevel4 token)) sub
+    (re-match-str? (:pronunciation opts) (.getPronunciation token)) sub
+    (re-match-str? (:conjugationform opts) (.getConjugationForm token)) sub
+    (re-match-str? (:conjugationtype opts) (.getConjugationType token)) sub
+    (re-match-str? (:baseform opts) (.getBaseForm token)) sub
+    (re-match-str? (:surface opts) (.getSurface token)) sub
     :else (.getSurface token)))
 
 (defn convert [^String text
