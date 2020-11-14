@@ -15,8 +15,8 @@
     (not (nil? (re-matches (re-pattern ptn) text)))))
 
 (defn token-matched? [^Token token
-                opts
-                k]
+                      opts
+                      k]
   (cond
     (= k :reading) (re-match-str? (opts k) (.getReading token))
     (= k :part) (re-match-str? (opts k) (.getPartOfSpeechLevel1 token))
@@ -34,14 +34,14 @@
                     opts
                     ^String sub]
   (let [m (loop [t token
-         k (keys opts)]
-    (if (nil? t)
-      false
-      (if (empty? k)
-        true
-        (if (token-matched? t opts (first k))
-          (recur t (rest k))
-          (recur nil (rest k))))))]
+                 k (keys opts)]
+            (if (nil? t)
+              false
+              (if (empty? k)
+                true
+                (if (token-matched? t opts (first k))
+                  (recur t (rest k))
+                  (recur nil (rest k))))))]
     (if m
       sub
       (.getSurface token))))

@@ -24,8 +24,7 @@
   (testing "ok: surface"
     (is (= "吾輩は寿司である" (convert "吾輩は猫である" {:surface "猫"} "寿司"))))
   (testing "ok: multi condition"
-    (is (= "吾輩の寿司" (convert "吾輩の名前" {:part "名詞" :part2 "一般"} "寿司"))))
-  )
+    (is (= "吾輩の寿司" (convert "吾輩の名前" {:part "名詞" :part2 "一般"} "寿司")))))
 
 (deftest print-usage-test
   (testing "ok:"
