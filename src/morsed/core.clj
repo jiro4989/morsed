@@ -31,18 +31,21 @@
     :surface (re-match-str? (opts k) (.getSurface token))
     false))
 
+(defn token-matched-all? [^Token token
+                          opts]
+  (loop [k (keys opts)]
+    (if (empty? k)
+      true
+      (if-not (token-matched? token opts (first k))
+        false
+        (recur (rest k))))))
+
 (defn part-replace [^Token token
                     opts
                     ^String sub]
-  (let [m (loop [k (keys opts)]
-            (if (empty? k)
-              true
-              (if-not (token-matched? token opts (first k))
-                false
-                (recur (rest k)))))]
-    (if m
-      sub
-      (.getSurface token))))
+  (if (token-matched-all? token opts)
+    sub
+    (.getSurface token)))
 
 (def matching-keys [:surface :baseform :conjugationform :conjugationtype :part :part2 :part3 :part4 :pronunciation :reading])
 
