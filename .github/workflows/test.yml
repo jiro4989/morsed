@@ -29,6 +29,12 @@ jobs:
       - run: lein cloverage --codecov
       - uses: codecov/codecov-action@v1
 
+  check-code-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: lein cljfmt check
+
   test-native-image:
     runs-on: ${{ matrix.runs-on }}
     strategy:
