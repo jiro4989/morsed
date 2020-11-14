@@ -35,13 +35,11 @@
                     ^String sub]
   (let [m (loop [t token
                  k (keys opts)]
-            (if (nil? t)
-              false
-              (if (empty? k)
-                true
-                (if (token-matched? t opts (first k))
-                  (recur t (rest k))
-                  (recur nil (rest k))))))]
+            (if (empty? k)
+              true
+              (if-not (token-matched? t opts (first k))
+                false
+                (recur t (rest k)))))]
     (if m
       sub
       (.getSurface token))))
