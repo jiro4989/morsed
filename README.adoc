@@ -17,6 +17,24 @@ $ morsed -p 名詞 -s 寿司 吾輩は猫である。名前はまだない
 $ morsed -p 名詞 -s 寿司 < README.adoc
 ----
 
+== Help
+
+`morsed -h`
+
+      --surface str          surface
+      --baseform str         baseform 基本形
+      --conjugationform str  conjugationform 活用形
+      --conjugationtype str  conjugationtype 活用型
+  -p, --part str             part of speech level 1 品詞再分類1
+      --part2 str            part of speech level 2 品詞再分類2
+      --part3 str            part of speech level 3 品詞再分類3
+      --part4 str            part of speech level 4 品詞再分類4
+      --pronunciation str    pronunciation 発音
+  -r, --reading str          reading 読み
+  -s, --sub str              substring
+  -P, --print                print tokens
+  -h, --help
+
 == License
 
 Apache License 2.0
