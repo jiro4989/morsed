@@ -18,18 +18,18 @@
 (defn token-matched? [^Token token
                       opts
                       k]
-  (cond
-    (= k :reading) (re-match-str? (opts k) (.getReading token))
-    (= k :part) (re-match-str? (opts k) (.getPartOfSpeechLevel1 token))
-    (= k :part2) (re-match-str? (opts k) (.getPartOfSpeechLevel2 token))
-    (= k :part3) (re-match-str? (opts k) (.getPartOfSpeechLevel3 token))
-    (= k :part4) (re-match-str? (opts k) (.getPartOfSpeechLevel4 token))
-    (= k :pronunciation) (re-match-str? (opts k) (.getPronunciation token))
-    (= k :conjugationform) (re-match-str? (opts k) (.getConjugationForm token))
-    (= k :conjugationtype) (re-match-str? (opts k) (.getConjugationType token))
-    (= k :baseform) (re-match-str? (opts k) (.getBaseForm token))
-    (= k :surface) (re-match-str? (opts k) (.getSurface token))
-    :else false))
+  (case k
+    :reading (re-match-str? (opts k) (.getReading token))
+    :part (re-match-str? (opts k) (.getPartOfSpeechLevel1 token))
+    :part2 (re-match-str? (opts k) (.getPartOfSpeechLevel2 token))
+    :part3 (re-match-str? (opts k) (.getPartOfSpeechLevel3 token))
+    :part4 (re-match-str? (opts k) (.getPartOfSpeechLevel4 token))
+    :pronunciation (re-match-str? (opts k) (.getPronunciation token))
+    :conjugationform (re-match-str? (opts k) (.getConjugationForm token))
+    :conjugationtype (re-match-str? (opts k) (.getConjugationType token))
+    :baseform (re-match-str? (opts k) (.getBaseForm token))
+    :surface (re-match-str? (opts k) (.getSurface token))
+    false))
 
 (defn part-replace [^Token token
                     opts
