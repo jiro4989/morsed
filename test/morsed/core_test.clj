@@ -22,7 +22,15 @@
   (testing "ok: baseform"
     (is (= "吾輩は寿司である" (convert "吾輩は猫である" {:baseform "猫"} "寿司"))))
   (testing "ok: surface"
-    (is (= "吾輩は寿司である" (convert "吾輩は猫である" {:surface "猫"} "寿司")))))
+    (is (= "吾輩は寿司である" (convert "吾輩は猫である" {:surface "猫"} "寿司"))))
+  (testing "ok: multi condition"
+    (is (= "吾輩の寿司" (convert "吾輩の名前" {:part "名詞" :part2 "一般"} "寿司"))))
+  (testing "ok: multi condition"
+    (is (= "寿司の名前" (convert "吾輩の名前" {:part "名詞" :reading "ワガハイ"} "寿司"))))
+  (testing "ok: regexp"
+    (is (= "寿司寿司田中" (convert "彼彼女田中" {:part "名詞" :part2 "代.*"} "寿司"))))
+  (testing "ok: ignore options"
+    (is (= "吾輩の寿司" (convert "吾輩の名前" {:part "名詞" :part2 "一般" :print :help} "寿司")))))
 
 (deftest print-usage-test
   (testing "ok:"

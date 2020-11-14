@@ -14,27 +14,45 @@
     false
     (not (nil? (re-matches (re-pattern ptn) text)))))
 
+(defn token-matched? [^Token token
+                      opts
+                      k]
+  (cond
+    (= k :reading) (re-match-str? (opts k) (.getReading token))
+    (= k :part) (re-match-str? (opts k) (.getPartOfSpeechLevel1 token))
+    (= k :part2) (re-match-str? (opts k) (.getPartOfSpeechLevel2 token))
+    (= k :part3) (re-match-str? (opts k) (.getPartOfSpeechLevel3 token))
+    (= k :part4) (re-match-str? (opts k) (.getPartOfSpeechLevel4 token))
+    (= k :pronunciation) (re-match-str? (opts k) (.getPronunciation token))
+    (= k :conjugationform) (re-match-str? (opts k) (.getConjugationForm token))
+    (= k :conjugationtype) (re-match-str? (opts k) (.getConjugationType token))
+    (= k :baseform) (re-match-str? (opts k) (.getBaseForm token))
+    (= k :surface) (re-match-str? (opts k) (.getSurface token))
+    :else false))
+
 (defn part-replace [^Token token
                     opts
                     ^String sub]
-  (cond
-    (re-match-str? (:reading opts) (.getReading token)) sub
-    (re-match-str? (:part opts) (.getPartOfSpeechLevel1 token)) sub
-    (re-match-str? (:part2 opts) (.getPartOfSpeechLevel2 token)) sub
-    (re-match-str? (:part3 opts) (.getPartOfSpeechLevel3 token)) sub
-    (re-match-str? (:part4 opts) (.getPartOfSpeechLevel4 token)) sub
-    (re-match-str? (:pronunciation opts) (.getPronunciation token)) sub
-    (re-match-str? (:conjugationform opts) (.getConjugationForm token)) sub
-    (re-match-str? (:conjugationtype opts) (.getConjugationType token)) sub
-    (re-match-str? (:baseform opts) (.getBaseForm token)) sub
-    (re-match-str? (:surface opts) (.getSurface token)) sub
-    :else (.getSurface token)))
+  (let [m (loop [t token
+                 k (keys opts)]
+            (if (nil? t)
+              false
+              (if (empty? k)
+                true
+                (if (token-matched? t opts (first k))
+                  (recur t (rest k))
+                  (recur nil (rest k))))))]
+    (if m
+      sub
+      (.getSurface token))))
+
+(def matching-keys [:surface :baseform :conjugationform :conjugationtype :part :part2 :part3 :part4 :pronunciation :reading])
 
 (defn convert [^String text
                opts
                ^String sub]
   (->> (tokens text)
-       (map #(part-replace % opts sub))
+       (map #(part-replace % (select-keys opts matching-keys) sub))
        (apply str)))
 
 (def cli-options
