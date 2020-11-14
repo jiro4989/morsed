@@ -9,7 +9,8 @@
 (defn tokens [^String s]
   (.tokenize (Tokenizer.) s))
 
-(defn re-match-str? [^String ptn text]
+(defn re-match-str? [^String ptn
+                     ^String text]
   (if (nil? ptn)
     false
     (not (nil? (re-matches (re-pattern ptn) text)))))
