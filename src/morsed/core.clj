@@ -46,11 +46,13 @@
       sub
       (.getSurface token))))
 
+(def matching-keys [:surface :baseform :conjugationform :conjugationtype :part :part2 :part3 :part4 :pronunciation :reading])
+
 (defn convert [^String text
                opts
                ^String sub]
   (->> (tokens text)
-       (map #(part-replace % opts sub))
+       (map #(part-replace % (select-keys opts matching-keys) sub))
        (apply str)))
 
 (def cli-options
