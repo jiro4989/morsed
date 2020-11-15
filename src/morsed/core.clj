@@ -1,7 +1,8 @@
 (ns morsed.core
   (:import [com.atilika.kuromoji.ipadic Token Tokenizer])
   (:require [clojure.tools.cli :refer [parse-opts]]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [cheshire.core :refer [generate-string]])
   (:gen-class))
 
 (set! *warn-on-reflection* true)
@@ -69,6 +70,8 @@
    ["-r" "--reading str" "reading 読み"]
    ["-s" "--sub str" "substring"]
    ["-P" "--print" "print tokens"]
+   ["-j" "--json" "json format for printing (need --print)"]
+   [nil "--pretty" "pretty print json (need --print and --json)" :default false]
    ["-h" "--help"]])
 
 (defn args-or-stdinlines [args]
@@ -90,6 +93,20 @@
     (println "-r --reading 読み" (.getReading token))
     (println "----------------------")))
 
+(defn token-json [^String text
+                  pretty]
+  (generate-string (for [^Token token (tokens text)]
+                     {:surface (.getSurface token)
+                      :baseform (.getBaseForm token)
+                      :conjugationform (.getConjugationForm token)
+                      :conjugationtype (.getConjugationType token)
+                      :part (.getPartOfSpeechLevel1 token)
+                      :part2 (.getPartOfSpeechLevel2 token)
+                      :part3 (.getPartOfSpeechLevel3 token)
+                      :part4 (.getPartOfSpeechLevel4 token)
+                      :pronunciation (.getPronunciation token)
+                      :reading (.getReading token)}) {:pretty pretty}))
+
 (def usage ["morsed morphological analyzer sed."
             "Copyright (c) 2020 jiro4989"
             "Released under the Apache License version 2.0."
@@ -104,7 +121,9 @@
 (defn do-main [args opts]
   (doseq [text (args-or-stdinlines args)]
     (if (:print opts)
-      (print-token text)
+      (if (:json opts)
+        (println (token-json text (:pretty opts)))
+        (print-token text))
       (println (convert text
                         opts
                         (:sub opts))))))
