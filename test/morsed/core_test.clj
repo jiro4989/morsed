@@ -34,7 +34,7 @@
 
 (deftest print-usage-test
   (testing "ok:"
-    (is (nil? (print-usage "吾輩は猫である")))))
+    (is (= (first help-top) (first (clojure.string/split-lines (usage "-h --help")))))))
 
 (deftest do-main-test
   (testing "ok: one argument"

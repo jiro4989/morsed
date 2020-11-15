@@ -79,19 +79,19 @@
     (-> *in* java.io.BufferedReader. line-seq)
     args))
 
-(defn print-token [^String text]
-  (doseq [^Token token (tokens text)]
-    (println "   --surface" (.getSurface token))
-    (println "   --baseform 基本形" (.getBaseForm token))
-    (println "   --conjugationform 活用形" (.getConjugationForm token))
-    (println "   --conjugationtype 活用型" (.getConjugationType token))
-    (println "-p --part 品詞再分類1" (.getPartOfSpeechLevel1 token))
-    (println "   --part2 品詞再分類2" (.getPartOfSpeechLevel2 token))
-    (println "   --part3 品詞再分類3" (.getPartOfSpeechLevel3 token))
-    (println "   --part4 品詞再分類4" (.getPartOfSpeechLevel4 token))
-    (println "   --pronunciation 発音" (.getPronunciation token))
-    (println "-r --reading 読み" (.getReading token))
-    (println "----------------------")))
+(defn token-freetext [^String text]
+  (str/join \newline (for [^Token token (tokens text)]
+                       (str/join \newline [(str "   --surface" (.getSurface token))
+                                           (str "   --baseform 基本形" (.getBaseForm token))
+                                           (str "   --conjugationform 活用形" (.getConjugationForm token))
+                                           (str "   --conjugationtype 活用型" (.getConjugationType token))
+                                           (str "-p --part 品詞再分類1" (.getPartOfSpeechLevel1 token))
+                                           (str "   --part2 品詞再分類2" (.getPartOfSpeechLevel2 token))
+                                           (str "   --part3 品詞再分類3" (.getPartOfSpeechLevel3 token))
+                                           (str "   --part4 品詞再分類4" (.getPartOfSpeechLevel4 token))
+                                           (str "   --pronunciation 発音" (.getPronunciation token))
+                                           (str "-r --reading 読み" (.getReading token))
+                                           "----------------------"]))))
 
 (defn token-json [^String text
                   pretty]
@@ -107,23 +107,23 @@
                       :pronunciation (.getPronunciation token)
                       :reading (.getReading token)}) {:pretty pretty}))
 
-(def usage ["morsed morphological analyzer sed."
-            "Copyright (c) 2020 jiro4989"
-            "Released under the Apache License version 2.0."
-            "https://github.com/jiro4989/morsed"
-            ""
-            "Options:"])
+(def help-top ["morsed morphological analyzer sed."
+               "Copyright (c) 2020 jiro4989"
+               "Released under the Apache License version 2.0."
+               "https://github.com/jiro4989/morsed"
+               ""
+               "Options:"])
 
-(defn print-usage [^String summary]
-  (println (str/join \newline (concat usage
-                                      (str/split summary #"\n")))))
+(defn usage [^String summary]
+  (str/join \newline (concat help-top
+                             (str/split summary #"\n"))))
 
 (defn do-main [args opts]
   (doseq [text (args-or-stdinlines args)]
     (if (:print opts)
       (if (:json opts)
         (println (token-json text (:pretty opts)))
-        (print-token text))
+        (println (token-freetext text)))
       (println (convert text
                         opts
                         (:sub opts))))))
@@ -131,6 +131,6 @@
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
     (cond
-      (:help options) (print-usage summary)
+      (:help options) (println (usage summary))
       (seq errors) (println errors)
       :else (do-main arguments options))))
