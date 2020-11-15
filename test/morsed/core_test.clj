@@ -1,6 +1,7 @@
 (ns morsed.core-test
   (:require [clojure.test :refer :all]
-            [morsed.core :refer :all]))
+            [morsed.core :refer :all]
+            [clojure.string :refer [split-lines]]))
 
 (deftest convert-test
   (testing "ok: reading"
@@ -32,9 +33,13 @@
   (testing "ok: ignore options"
     (is (= "吾輩の寿司" (convert "吾輩の名前" {:part "名詞" :part2 "一般" :print :help} "寿司")))))
 
-(deftest print-usage-test
+(deftest usage-test
   (testing "ok:"
-    (is (= (first help-top) (first (clojure.string/split-lines (usage "-h --help")))))))
+    (is (= (first help-top) (first (split-lines (usage "-h --help")))))))
+
+(deftest token-freetext-test
+  (testing "ok:"
+    (is (= "   --surface 吾輩" (first (split-lines (token-freetext "吾輩は猫である。"))) ))))
 
 (deftest do-main-test
   (testing "ok: one argument"
