@@ -9,7 +9,8 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [com.atilika.kuromoji/kuromoji-ipadic "0.9.0"]
-                 [org.clojure/tools.cli "1.0.194"]]
+                 [org.clojure/tools.cli "1.0.194"]
+                 [cheshire "5.10.0"]]
   :repl-options {:init-ns morsed.core}
   :main "morsed.core"
   :profiles {:uberjar {:aot :all

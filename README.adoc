@@ -46,19 +46,27 @@ $ morsed -r 'カ.*' -s 寿司 彼彼女田中
 
 `morsed -h`
 
-      --surface str          surface
-      --baseform str         baseform 基本形
-      --conjugationform str  conjugationform 活用形
-      --conjugationtype str  conjugationtype 活用型
-  -p, --part str             part of speech level 1 品詞再分類1
-      --part2 str            part of speech level 2 品詞再分類2
-      --part3 str            part of speech level 3 品詞再分類3
-      --part4 str            part of speech level 4 品詞再分類4
-      --pronunciation str    pronunciation 発音
-  -r, --reading str          reading 読み
-  -s, --sub str              substring
-  -P, --print                print tokens
-  -h, --help
+ morsed morphological analyzer sed.
+ Copyright (c) 2020 jiro4989
+ Released under the Apache License version 2.0.
+ https://github.com/jiro4989/morsed
+ 
+ Options:
+       --surface str          surface
+       --baseform str         baseform 基本形
+       --conjugationform str  conjugationform 活用形
+       --conjugationtype str  conjugationtype 活用型
+   -p, --part str             part of speech level 1 品詞再分類1
+       --part2 str            part of speech level 2 品詞再分類2
+       --part3 str            part of speech level 3 品詞再分類3
+       --part4 str            part of speech level 4 品詞再分類4
+       --pronunciation str    pronunciation 発音
+   -r, --reading str          reading 読み
+   -s, --sub str              substring
+   -P, --print                print tokens
+   -j, --json                 json format for printing (need --print)
+       --pretty               pretty print json (need --print and --json)
+   -h, --help
 
 == License
 
