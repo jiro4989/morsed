@@ -41,6 +41,13 @@
   (testing "ok:"
     (is (= "   --surface 吾輩" (first (split-lines (token-freetext "吾輩は猫である。"))) ))))
 
+(deftest token-json-test
+  (testing "ok: not pretty"
+    (is (= \[ (first (token-json "吾輩は猫である。" false)))))
+  (testing "ok: not pretty"
+    (is (= \[ (first (token-json "吾輩は猫である。" true)))))
+  )
+
 (deftest do-main-test
   (testing "ok: one argument"
     (is (nil? (do-main ["吾輩は猫である"] {:part "名詞" :sub "寿司"}))))
