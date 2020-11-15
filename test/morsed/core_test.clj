@@ -54,4 +54,11 @@
   (testing "ok: multi arguments"
     (is (nil? (do-main ["吾輩は猫である" "隣の客はよく柿食う客だ"] {:part "名詞" :sub "寿司"}))))
   (testing "ok: print token"
-    (is (nil? (do-main ["吾輩は猫である" "隣の客はよく柿食う客だ"] {:print true})))))
+    (is (nil? (do-main ["吾輩は猫である" "隣の客はよく柿食う客だ"] {:print true}))))
+  (testing "ok: print token json format"
+    (is (nil? (do-main ["吾輩は猫である" "隣の客はよく柿食う客だ"] {:print true :json true}))))
+  (testing "ok: print token json format"
+    (is (nil? (do-main ["吾輩は猫である" "隣の客はよく柿食う客だ"] {:print true :json true :pretty false}))))
+  (testing "ok: print token pretty json format"
+    (is (nil? (do-main ["吾輩は猫である" "隣の客はよく柿食う客だ"] {:print true :json true :pretty true}))))
+  )
