@@ -81,16 +81,16 @@
 
 (defn token-freetext [^String text]
   (str/join \newline (for [^Token token (tokens text)]
-                       (str/join \newline [(str "   --surface" (.getSurface token))
-                                           (str "   --baseform 基本形" (.getBaseForm token))
-                                           (str "   --conjugationform 活用形" (.getConjugationForm token))
-                                           (str "   --conjugationtype 活用型" (.getConjugationType token))
-                                           (str "-p --part 品詞再分類1" (.getPartOfSpeechLevel1 token))
-                                           (str "   --part2 品詞再分類2" (.getPartOfSpeechLevel2 token))
-                                           (str "   --part3 品詞再分類3" (.getPartOfSpeechLevel3 token))
-                                           (str "   --part4 品詞再分類4" (.getPartOfSpeechLevel4 token))
-                                           (str "   --pronunciation 発音" (.getPronunciation token))
-                                           (str "-r --reading 読み" (.getReading token))
+                       (str/join \newline [(str "   --surface " (.getSurface token))
+                                           (str "   --baseform 基本形 " (.getBaseForm token))
+                                           (str "   --conjugationform 活用形 " (.getConjugationForm token))
+                                           (str "   --conjugationtype 活用型 " (.getConjugationType token))
+                                           (str "-p --part 品詞再分類1 " (.getPartOfSpeechLevel1 token))
+                                           (str "   --part2 品詞再分類2 " (.getPartOfSpeechLevel2 token))
+                                           (str "   --part3 品詞再分類3 " (.getPartOfSpeechLevel3 token))
+                                           (str "   --part4 品詞再分類4 " (.getPartOfSpeechLevel4 token))
+                                           (str "   --pronunciation 発音 " (.getPronunciation token))
+                                           (str "-r --reading 読み " (.getReading token))
                                            "----------------------"]))))
 
 (defn token-json [^String text
